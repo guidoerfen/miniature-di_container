@@ -1,0 +1,20 @@
+{
+  "name": "miniature/di_container",
+  "description": "A simple implementation of a dependency injection container for PHP-classes and parameters, consuming array data.",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Guido Erfen",
+      "email": "sourcecode@erfen.de",
+    }
+  ],
+  "require": {
+    "php": ">=7.4"
+  },
+  "autoload": {
+    "psr-4": {"Miniature\\DiContainer\\": "src/"}
+  },
+  "keywords": [
+    "dependency injection container"
+  ]
+}
