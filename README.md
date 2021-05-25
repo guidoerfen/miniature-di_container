@@ -10,6 +10,50 @@ It runs on the basis of injected data (PHP-array).
 The syntax that is used for interpreting the wiring can be manipulated by the injection of the instance of a syntax class.
 
 
+
+
+<div>&nbsp;<br>&nbsp;<br>&nbsp;<br>&nbsp;<br>&nbsp;<br>&nbsp;<br>&nbsp;</div>
+
+# Installation
+### Using Composer
+
+```shell script
+composer require miniature/component
+```
+### Downloading Package
+
+Unzip to a directory named **`Miniature`**.
+Add to your autoloading something like the following:
+
+```PHP
+<?php
+
+function miniature_autoload($class)
+{
+    $fileName = str_replace('\\', '/', realpath(__DIR__) . '/' . $class ) . '.php';
+    if (preg_match('/^(.*\/Miniature)\/(\w+)\/((\w+\/)*)(\w+)\.php/', $fileName)) {
+        $newFileName = preg_replace(
+            '/^(.*\/Miniature)\/(\w+)\/((\w+\/)*)(\w+)\.php/',
+            '$1/$2/src/$3$5.php',
+            $fileName
+        );
+        if (is_file($newFileName)) {
+            require $newFileName;
+        }
+    }
+}
+spl_autoload_register('miniature_autoload');
+
+```
+
+Can be that you must adjust the file path concatenation for `filePath`
+by setting the relative path in the `filepath()` statement.
+
+
+
+
+
+
 ## Instantiating
 ```PHP
 $myDiContainer = (new \Miniature\DiContainer\DiContainer())
