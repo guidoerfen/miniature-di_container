@@ -18,7 +18,7 @@ $myDiContainer = (new \Miniature\DiContainer\DiContainer())
 
 ### The syntax
 Find information about the syntax
-[here](https://github.com/guidoerfen/miniature/tree/main/Component#the-di-mapping).
+[here](https://github.com/guidoerfen/miniature-component#the-di-mapping).
 
 
 <a name="syntax-overrides"></a>

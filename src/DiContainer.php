@@ -2,7 +2,6 @@
 
 namespace Miniature\DiContainer;
 
-use http\Exception\RuntimeException;
 use Miniature\Component\Reader\YamlParserDecoratorInterface;
 use Miniature\DiContainer\DiNode;
 use Miniature\DiContainer\Syntax\MapperAbstract as DiSyntaxMapperAbstract;
@@ -15,8 +14,8 @@ use Miniature\DiContainer\Syntax\MapperNative as DiSyntaxMapperNative;
  *
  * @package Miniature\DiContainer
  * @author Guido Erfen <sourcecode@erfen.de>
- * @see https://github.com/guidoerfen/miniature/tree/main/DiContainer
- * @see https://github.com/guidoerfen/miniature/tree/main/Component#the-di-mapping
+ * @see https://github.com/guidoerfen/miniature-di_container
+ * @see https://github.com/guidoerfen/miniature-component#the-di-mapping
  */
 class DiContainer
 {

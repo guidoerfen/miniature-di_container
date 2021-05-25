@@ -10,7 +10,7 @@ namespace Miniature\DiContainer;
  *
  * @package Miniature\DiContainer
  * @author Guido Erfen <sourcecode@erfen.de>
- * @see https://github.com/guidoerfen/miniature/tree/main/Component
+ * @see https://github.com/guidoerfen/miniature-component
  */
 class DiNode
 {
