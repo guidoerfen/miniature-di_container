@@ -18,7 +18,7 @@ The syntax that is used for interpreting the wiring can be manipulated by the in
 ### Using Composer
 
 ```shell script
-composer require miniature/component
+composer require miniature/di_container
 ```
 ### Downloading Package
 
