@@ -88,10 +88,15 @@ This is absolutely your choice where the mapping comes from.
 We don't recomment using the reader class `Miniature\Component\Reader\Config`
 out of context since it might be moved int the future.
 
-You might consider the
+If you want the advantages of the
+[Reader](https://github.com/guidoerfen/miniature-component#reading-the-configuration-directory)
+and the
+[environment based overrides](https://github.com/guidoerfen/miniature-component#environment-based-overrides)
+You might consider the use of the
 [`public` key](https://github.com/guidoerfen/miniature-component#key-public)
  in combination of
 [the availability in environments](https://github.com/guidoerfen/miniature-component#setenvallowingpublicaccess)
 in order to create a grey-box/white-box behaviour
 [component](https://github.com/guidoerfen/miniature-component#the-instance-of-the-component)
 as a provider for your DI-Mapping.
+
