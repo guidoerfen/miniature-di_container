@@ -88,8 +88,9 @@ This is absolutely your choice where the mapping comes from.
 We don't recomment using the reader class `Miniature\Component\Reader\Config`
 out of context since it might be moved int the future.
 
-You might consider the [public](https://github.com/guidoerfen/miniature-component#key-public)
-key in combination of  
+You might consider the
+[`public` key](https://github.com/guidoerfen/miniature-component#key-public)
+ in combination of
 [the availability in environments](https://github.com/guidoerfen/miniature-component#setenvallowingpublicaccess)
 in order to create a grey-box/white-box behaviour
 [component](https://github.com/guidoerfen/miniature-component#the-instance-of-the-component)
