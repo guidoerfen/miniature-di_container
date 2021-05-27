@@ -1,6 +1,15 @@
+<img align="right" width="100" height="100" src="https://github.com/guidoerfen/miniature-component/blob/master/img/miniature-logo-100px.png">
+
+
+
+
+
+
+
 # DiContainer
-### Caution!
+### Warning!
 This is still on an experimental level.
+We don't know if we've got everything together in the moment.
 Extensive testing needs to be done also.
 
 # Purpose
