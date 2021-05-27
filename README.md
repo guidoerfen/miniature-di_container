@@ -9,8 +9,8 @@
 # DiContainer
 ### Warning!
 This is still on an experimental level.
-We don't know if we've got everything together in the moment.
-Extensive testing needs to be done also.
+We don't know if we've got everything together currently.
+Extensive testing needs to be done as well.
 
 # Purpose
 
@@ -32,7 +32,7 @@ composer require miniature/di_container
 ### Downloading Package
 
 Unzip to a directory named **`Miniature`**.
-Add to your autoloading something like the following:
+Add to your autoload something like the following:
 
 ```PHP
 <?php
@@ -94,8 +94,8 @@ $myDiContainer = (
 
 This is absolutely your choice where the mapping comes from.
 
-We don't recomment using the reader class `Miniature\Component\Reader\Config`
-out of context since it might be moved int the future.
+We don't recommend using the reader class `Miniature\Component\Reader\Config`
+out of context since it might be moved in the future.
 
 If you want the advantages of the
 [Reader](https://github.com/guidoerfen/miniature-component#reading-the-configuration-directory)
