@@ -39,6 +39,7 @@ class DiContainer
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *   ARRAY-KEYS ON MAPPINGS (Syntax)
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+    /*   Dynamic Syntax                                            */
     protected string $diMappingKey;
     protected string $parametersKey;
     protected string $classKey;
@@ -47,6 +48,17 @@ class DiContainer
     protected string $instanceKey;
     protected string $singletonFlagKey;
     protected string $publicKey;
+
+    /*   Static Syntax                                             */
+    const DI_CONTAINER_MAPPING_KEY     = 'miniature.di_container';
+    const DECLARED_IN_KEY              = 'declared_in';
+    const SIMPLE_CLASSNAME_KEY         = 'class_simple';
+    const FULL_QUALIFIED_KEY           = 'class_full_qualified';
+    const FULL_QUALIFIED_REGEX_KEY     = 'class_full_qualified_regex';
+    const USE_STATEMENT_KEY            = 'class_use';
+    const STATIC_METHOD_KEY            = 'static_method';
+    const CONSTRUCTOR_CALL_REGEX_KEY   = 'constructor_call_regex';
+    const CONSTRUCTOR_CALL_FULL_QUALIFIED_REGEX_KEY   = 'constructor_call_regex_full';
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *                                 INIT
@@ -67,7 +79,7 @@ class DiContainer
         $this->staticMethodKey   = $diSyntaxMapper->getStaticMethodKey();
         $this->publicKey         = $diSyntaxMapper->getPublicKey();
 
-        $this->diMappings['miniature.di_container'] = [
+        $this->diMappings[self::DI_CONTAINER_MAPPING_KEY] = [
             $this->instanceKey       => $this,
             $this->singletonFlagKey => true,
             $this->classKey          => 'Miniature\DiContainer\DiContainer',
@@ -137,7 +149,44 @@ class DiContainer
     }
 
 
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *                                 REG-EX MAPPING
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+    public function getClassRegExMapping() : array
+    {
+        $regExMapping = [];
+        foreach ($this->diMappings as $offset => $mapping) {
+            $regExMapping[$offset] = $this->getRegExMapping($mapping);
+        }
+        unset ($regExMapping[self::DI_CONTAINER_MAPPING_KEY]);
+        return $regExMapping;
+    }
 
+    private function getRegExMapping($mapping) : array
+    {
+        $result = [];
+        $staticMethod                    = $this->fetchStaticGenerationMethodName($mapping);
+        $fullQualifiedName               = $mapping[$this->classKey];
+        $fullQualifiedNameRegEx          = '/'.str_replace('\\', '\\\\', $fullQualifiedName). '/';
+        $simpleClassName                 = substr($fullQualifiedName, strrpos($fullQualifiedName, '\\') + 1);
+
+        $constructorCallRegEx            = '/\s*new\s+'. $simpleClassName        .'\s*\(.*\)\s*;/';
+        $constructorCallRegExQualified   = '/\s*new\s+'. $fullQualifiedNameRegEx .'\s*\(.*\)\s*;/';
+        if (! empty($staticMethod)) {
+            $constructorCallRegEx            = '/\s*'.   $simpleClassName        .'\s*::\s*' . $staticMethod .'\s*\(.*\)\s*;/';
+            $constructorCallRegExQualified   = '/\s*'.   $fullQualifiedNameRegEx .'\s*::\s*' . $staticMethod .'\s*\(.*\)\s*;/';
+        }
+
+        $result[self::DECLARED_IN_KEY]            = isset($mapping[self::DECLARED_IN_KEY]) ? $mapping[self::DECLARED_IN_KEY] : null;
+        $result[self::STATIC_METHOD_KEY]          = $staticMethod;
+        $result[self::FULL_QUALIFIED_KEY]         = $fullQualifiedName;
+        $result[self::FULL_QUALIFIED_REGEX_KEY]   = $fullQualifiedNameRegEx;
+        $result[self::SIMPLE_CLASSNAME_KEY]       = $simpleClassName;
+        $result[self::USE_STATEMENT_KEY]          = '/\s*use\s+' . $fullQualifiedNameRegEx . '\s*(as\s+(\w)+);/';
+        $result[self::CONSTRUCTOR_CALL_REGEX_KEY] = $constructorCallRegEx;
+        $result[self::CONSTRUCTOR_CALL_FULL_QUALIFIED_REGEX_KEY] = $constructorCallRegExQualified;
+        return $result;
+    }
 
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -229,7 +278,9 @@ class DiContainer
         if (! isset($this->params[$offset])) {
             throw new \InvalidArgumentException("Key '$offset' not found in the params-mapping!");
         }
-        return $this->params[$offset];
+        $params = $this->params[$offset];
+        unset($params[self::DECLARED_IN_KEY]);
+        return $params;
     }
 
 
