@@ -56,7 +56,7 @@ class DiContainer
     const SIMPLE_CLASSNAME_KEY         = 'classNameSimple';
     const FULL_QUALIFIED_KEY           = 'classNameFullyQualified';
     const FULL_QUALIFIED_REGEX_KEY     = 'classNameFullyQualifiedRegex';
-    const USE_STATEMENT_KEY            = 'classUseStatement';
+    const USE_STATEMENT_REGEX_KEY      = 'classUseStatementRegex';
     const STATIC_METHOD_KEY            = 'staticMethod';
     const CONSTRUCTOR_CALL_REGEX_KEY   = 'constructorCallRegex';
     const CONSTRUCTOR_CALL_FULL_QUALIFIED_REGEX_KEY   = 'constructorCallRegexFull';
@@ -187,7 +187,7 @@ class DiContainer
         $result[self::FULL_QUALIFIED_KEY]         = $fullQualifiedName;
         $result[self::FULL_QUALIFIED_REGEX_KEY]   = '/' . $fullQualifiedNameRegEx . '/';
         $result[self::SIMPLE_CLASSNAME_KEY]       = $simpleClassName;
-        $result[self::USE_STATEMENT_KEY]          = '/\s*use\s+' . $fullQualifiedNameRegEx . '\s*(as\s+(\w)+);/';
+        $result[self::USE_STATEMENT_REGEX_KEY]    = '/use\s+' . $fullQualifiedNameRegEx . '\s*?(as\s+?(\w+?))?[\n\r\s]*;/';
         $result[self::CONSTRUCTOR_CALL_REGEX_KEY] = $constructorCallRegEx;
         $result[self::CONSTRUCTOR_CALL_FULL_QUALIFIED_REGEX_KEY] = $constructorCallRegExQualified;
         return $result;
