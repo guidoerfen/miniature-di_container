@@ -51,14 +51,15 @@ class DiContainer
 
     /*   Static Syntax                                             */
     const DI_CONTAINER_MAPPING_KEY     = 'miniature.di_container';
-    const DECLARED_IN_KEY              = 'declared_in';
-    const SIMPLE_CLASSNAME_KEY         = 'class_simple';
-    const FULL_QUALIFIED_KEY           = 'class_full_qualified';
-    const FULL_QUALIFIED_REGEX_KEY     = 'class_full_qualified_regex';
-    const USE_STATEMENT_KEY            = 'class_use';
-    const STATIC_METHOD_KEY            = 'static_method';
-    const CONSTRUCTOR_CALL_REGEX_KEY   = 'constructor_call_regex';
-    const CONSTRUCTOR_CALL_FULL_QUALIFIED_REGEX_KEY   = 'constructor_call_regex_full';
+    /** @see Miniature\Component\Reader\Value\ConstructorCallDetector */
+    const DECLARED_IN_KEY              = 'declarationFile';
+    const SIMPLE_CLASSNAME_KEY         = 'classNameSimple';
+    const FULL_QUALIFIED_KEY           = 'classNameFullyQualified';
+    const FULL_QUALIFIED_REGEX_KEY     = 'classNameFullyQualifiedRegex';
+    const USE_STATEMENT_KEY            = 'classUseStatement';
+    const STATIC_METHOD_KEY            = 'staticMethod';
+    const CONSTRUCTOR_CALL_REGEX_KEY   = 'constructorCallRegex';
+    const CONSTRUCTOR_CALL_FULL_QUALIFIED_REGEX_KEY   = 'constructorCallRegexFull';
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *                                 INIT
@@ -165,22 +166,26 @@ class DiContainer
     private function getRegExMapping($mapping) : array
     {
         $result = [];
-        $staticMethod                    = $this->fetchStaticGenerationMethodName($mapping);
-        $fullQualifiedName               = $mapping[$this->classKey];
-        $fullQualifiedNameRegEx          = '/'.str_replace('\\', '\\\\', $fullQualifiedName). '/';
-        $simpleClassName                 = substr($fullQualifiedName, strrpos($fullQualifiedName, '\\') + 1);
+        $staticMethod                       = $this->fetchStaticGenerationMethodName($mapping);
+        $fullQualifiedName                  = $mapping[$this->classKey];
+        $simpleClassName                    = substr($fullQualifiedName, strrpos($fullQualifiedName, '\\') + 1);
 
-        $constructorCallRegEx            = '/\s*new\s+'. $simpleClassName        .'\s*\(.*\)\s*;/';
-        $constructorCallRegExQualified   = '/\s*new\s+'. $fullQualifiedNameRegEx .'\s*\(.*\)\s*;/';
+        $fullQualifiedNameRegEx             = str_replace('\\', '\\\\', $fullQualifiedName);
+        $paramBracesRegEx                   = '[\n\r\s]*\([^)]*?\)';
+        $newRegEx                           = 'new[\n\r\s]+';
+        $colonRegEx                         = '[\n\r\s]*::[\n\r\s]*';
+
+        $constructorCallRegEx               = '/' . $newRegEx               . $simpleClassName            . $paramBracesRegEx . '/';
+        $constructorCallRegExQualified      = '/' . $newRegEx               . $fullQualifiedNameRegEx     . $paramBracesRegEx . '/';
         if (! empty($staticMethod)) {
-            $constructorCallRegEx            = '/\s*'.   $simpleClassName        .'\s*::\s*' . $staticMethod .'\s*\(.*\)\s*;/';
-            $constructorCallRegExQualified   = '/\s*'.   $fullQualifiedNameRegEx .'\s*::\s*' . $staticMethod .'\s*\(.*\)\s*;/';
+            $constructorCallRegEx           = '/' . $simpleClassName        . $colonRegEx . $staticMethod . $paramBracesRegEx . '/';
+            $constructorCallRegExQualified  = '/' . $fullQualifiedNameRegEx . $colonRegEx . $staticMethod . $paramBracesRegEx . '/';
         }
 
         $result[self::DECLARED_IN_KEY]            = isset($mapping[self::DECLARED_IN_KEY]) ? $mapping[self::DECLARED_IN_KEY] : null;
         $result[self::STATIC_METHOD_KEY]          = $staticMethod;
         $result[self::FULL_QUALIFIED_KEY]         = $fullQualifiedName;
-        $result[self::FULL_QUALIFIED_REGEX_KEY]   = $fullQualifiedNameRegEx;
+        $result[self::FULL_QUALIFIED_REGEX_KEY]   = '/' . $fullQualifiedNameRegEx . '/';
         $result[self::SIMPLE_CLASSNAME_KEY]       = $simpleClassName;
         $result[self::USE_STATEMENT_KEY]          = '/\s*use\s+' . $fullQualifiedNameRegEx . '\s*(as\s+(\w)+);/';
         $result[self::CONSTRUCTOR_CALL_REGEX_KEY] = $constructorCallRegEx;
