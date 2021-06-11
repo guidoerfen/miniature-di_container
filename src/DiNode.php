@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Miniature\DiContainer;
 
@@ -28,13 +29,13 @@ class DiNode
         }
     }
 
-    public function setChild(string $name, object $child)
+    public function setChild(string $name, object $child) : void
     {
         $this->checkDeadlock($name);
         $this->children[$name] = $child;
     }
 
-    private function checkDeadlock($name)
+    private function checkDeadlock(string $name) : void
     {
         if ($name == $this->name) {
             $rootName = $this->getRootName();
@@ -49,7 +50,7 @@ class DiNode
         }
     }
 
-    public function getRootName()
+    public function getRootName() : ?string
     {
         if ($this->parent instanceof DiNode) {
             return $this->parent->getRootName();

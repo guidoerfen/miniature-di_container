@@ -80,7 +80,7 @@ abstract class MapperAbstract
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *   PARAMETERS-NAMES
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-    public abstract function isParametersKey($string) : bool;
+    public abstract function isParametersKey(string $string) : bool;
 
     public abstract function getParametersName(string $string) : ?string;
 

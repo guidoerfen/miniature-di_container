@@ -46,7 +46,7 @@ class MapperNative extends MapperAbstract
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *   PARAMETERS-NAMES
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-    public function isParametersKey($string) : bool
+    public function isParametersKey(string $string) : bool
     {
         return substr($string, 0, 1) === '%';
     }

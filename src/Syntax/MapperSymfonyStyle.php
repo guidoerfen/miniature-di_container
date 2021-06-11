@@ -1,9 +1,16 @@
 <?php
+declare(strict_types=1);
 
 namespace Miniature\DiContainer\Syntax;
 
 use Miniature\DiContainer\Syntax\MapperNative;
 
+/**
+ * Class MapperSymfonyStyle
+ * @package Miniature\DiContainer\Syntax
+ * @package Miniature\Component\Reader\Value
+ * @author Guido Erfen <sourcecode@erfen.de>
+ */
 class MapperSymfonyStyle extends MapperNative
 {
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -26,7 +33,7 @@ class MapperSymfonyStyle extends MapperNative
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *   PARAMETERS-NAMES
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-    public function isParametersKey($string) : bool
+    public function isParametersKey(string $string) : bool
     {
         return substr($string, 0, 1) === '%' &&
                substr($string, -1) === '%';
