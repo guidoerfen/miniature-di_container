@@ -52,6 +52,7 @@ class DiContainer
 
     /*   Static Syntax                                             */
     const DI_CONTAINER_MAPPING_KEY     = 'miniature.di_container';
+    const SKIP_VIOLATION_SCAN          = 'skipViolationScan';
     /** @see Miniature\Component\Reader\Value\ConstructorCallDetector */
     const DECLARED_IN_KEY              = 'declarationFile';
     const SIMPLE_CLASSNAME_KEY         = 'classNameSimple';
@@ -140,7 +141,7 @@ class DiContainer
         }
     }
 
-    private function registerPublic(string $offset, array $mapping)
+    private function registerPublic(string $offset, array $mapping) : void
     {
         if (isset($mapping[$this->publicKey])) {
             $value = $mapping[$this->publicKey];
@@ -152,19 +153,24 @@ class DiContainer
 
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     *                                 REG-EX MAPPING
+     *                                 REG-EX MAPPING /
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+    /**
+     * @see Miniature\Component\Reader\IlleagalConstructorCall->__construct()
+     */
     public function getClassRegExMapping() : array
     {
         $regExMapping = [];
         foreach ($this->diMappings as $offset => $mapping) {
-            $regExMapping[$offset] = $this->getRegExMapping($mapping);
+            if (! $this->skipViolationScan($mapping)) {
+                $regExMapping[$offset] = $this->getRegExMapping($mapping);
+            }
         }
         unset ($regExMapping[self::DI_CONTAINER_MAPPING_KEY]);
         return $regExMapping;
     }
 
-    private function getRegExMapping($mapping) : array
+    private function getRegExMapping(array $mapping) : array
     {
         $result = [];
         $staticMethod                       = $this->fetchStaticGenerationMethodName($mapping);
@@ -192,6 +198,17 @@ class DiContainer
         $result[self::CONSTRUCTOR_CALL_REGEX_KEY] = $constructorCallRegEx;
         $result[self::CONSTRUCTOR_CALL_FULL_QUALIFIED_REGEX_KEY] = $constructorCallRegExQualified;
         return $result;
+    }
+
+    private function skipViolationScan(array $mapping) : bool
+    {
+        if (isset($mapping[self::SKIP_VIOLATION_SCAN])) {
+            $value = isset($mapping[self::SKIP_VIOLATION_SCAN]);
+            if ($value === true || $value === 1 || $value === 'true') {
+                return true;
+            }
+        }
+        return false;
     }
 
 
