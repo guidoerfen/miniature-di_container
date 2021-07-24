@@ -189,7 +189,7 @@ class DiContainer
             $constructorCallRegExQualified  = '/' . $fullQualifiedNameRegEx . $colonRegEx . $staticMethod . $paramBracesRegEx . '/';
         }
 
-        $result[self::DECLARED_IN_KEY]            = isset($mapping[self::DECLARED_IN_KEY]) ? $mapping[self::DECLARED_IN_KEY] : null;
+        $result[self::DECLARED_IN_KEY]            = $mapping[self::DECLARED_IN_KEY] ?? null;
         $result[self::STATIC_METHOD_KEY]          = $staticMethod;
         $result[self::FULL_QUALIFIED_KEY]         = $fullQualifiedName;
         $result[self::FULL_QUALIFIED_REGEX_KEY]   = '/' . $fullQualifiedNameRegEx . '/';
@@ -229,7 +229,7 @@ class DiContainer
         return $this->getInstance($offset, null, $overrideArgumentList);
     }
 
-    private function getInstance(string $offset, DiNode $parent = null, $overrideArgumentList = null) : ?object
+    private function getInstance(string $offset, DiNode $parent = null, ?array $overrideArgumentList = null) : ?object
     {
         $instance     = null;
         $mapping      = $this->fetchDiMapping($offset, $overrideArgumentList);
@@ -275,8 +275,7 @@ class DiContainer
         }
 
         // $overrideArgumentList = injection "on-the-fly"
-        if (isset($mapping[$this->argumentsKey]) &&
-            ! empty($mapping[$this->argumentsKey]) &&
+        if (! empty($mapping[$this->argumentsKey]) &&
             ! empty($overrideArgumentList)
         ) {
             if ($this->isSingleton($mapping)) {
@@ -296,7 +295,7 @@ class DiContainer
     }
 
 
-    private function fetchParamByOffset(string $offset)
+    private function fetchParamByOffset(string $offset) : array
     {
         if (! isset($this->params[$offset])) {
             throw new \InvalidArgumentException("Key '$offset' not found in the params-mapping!");
@@ -310,9 +309,8 @@ class DiContainer
 
     private function  fetchStaticGenerationMethodName(array $mapping) : ?string
     {
-        if (isset($mapping[$this->staticMethodKey]) &&
-            is_string($mapping[$this->staticMethodKey]) &&
-            ! empty($mapping[$this->staticMethodKey])
+        if (! empty($mapping[$this->staticMethodKey]) &&
+            is_string($mapping[$this->staticMethodKey])
         ) {
             return $mapping[$this->staticMethodKey];
         }
@@ -346,7 +344,7 @@ class DiContainer
         return false;
     }
 
-    private function storeInstanceToMapping(string $offset, object $instance)
+    private function storeInstanceToMapping(string $offset, object $instance) : void
     {
         $this->diMappings[$offset][$this->instanceKey] = $instance;
     }
